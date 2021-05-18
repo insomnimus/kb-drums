@@ -2,3 +2,9 @@
 *.txt
 *.sh
 *.ps1
+*.exe
+*.elv
+*.zsh
+*.bash
+_*
+*.fish
