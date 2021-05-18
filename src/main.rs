@@ -16,12 +16,8 @@ struct Drum {
 impl Drum {
     fn start(&mut self) {
         loop {
-            let event = match read() {
-                Ok(e) => e,
-                _ => continue,
-            };
-            match event {
-                Event::Key(k) => match k.code {
+            if let Ok(Event::Key(k)) = read() {
+                match k.code {
                     KeyCode::Char(c) => {
                         if let Some(n) = map_key(c) {
                             self.play(n);
@@ -29,8 +25,7 @@ impl Drum {
                     }
                     KeyCode::Esc => return,
                     _ => (),
-                },
-                _ => (),
+                }
             };
         }
     }
@@ -96,7 +91,7 @@ fn main() {
 
     let out_ports = midi_out.ports();
 
-    if out_ports.len() == 0 {
+    if out_ports.is_empty() {
         eprintln!("no midi output ports detected");
         exit(1);
     }
@@ -110,14 +105,14 @@ fn main() {
     }
 
     let out_port = &out_ports[port_no];
-    let mut out = midi_out.connect(out_port, "kb-drums").unwrap_or_else(|e| {
+    let out = midi_out.connect(out_port, "kb-drums").unwrap_or_else(|e| {
         eprintln!("error connecting to midi out port: {:?}", e);
         exit(1);
     });
 
     let mut drum = Drum { con: out };
 
-    enable_raw_mode();
+    enable_raw_mode().ok();
     drum.start();
-    disable_raw_mode();
+    disable_raw_mode().ok();
 }
