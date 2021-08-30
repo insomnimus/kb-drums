@@ -27,6 +27,7 @@ struct Args {
 
 impl Args {
 	fn app() -> App<'static> {
+
 		let app = App::new("kb-drums")
 			.about("Play MIDI drums from the command line.")
 			.version(crate_version!())
@@ -47,6 +48,7 @@ impl Args {
 			.about("The MIDI device no. Defaults to the first available device.")
 			.takes_value(true)
 			.validator(|s| {
+
 				s.parse::<usize>()
 					.map(|_| {})
 					.map_err(|_| "the value must be a non-negative number")
@@ -58,12 +60,15 @@ impl Args {
 			.about("A number between 0 and 127, 127=max.")
 			.takes_value(true)
 			.validator(|s| {
+
 				s.parse::<u8>()
 					.map_err(|_| String::from("the value must be an integer between 0 and 127"))
 					.and_then(|n| {
 						if n > 127 {
+
 							Err(String::from("the value can't be higher than 127"))
 						} else {
+
 							Ok(())
 						}
 					})
@@ -88,30 +93,42 @@ impl Args {
 	}
 
 	fn from_args() -> Self {
+
 		let m = Self::app().get_matches();
+
 		match m.subcommand_name() {
 			None => (),
 			Some(cmd) => {
+
 				if let Err(e) = match cmd {
 					"drums" => {
+
 						cmd_drums::run();
+
 						Ok(())
 					}
 					"list" => cmd_devices::run(),
 					"default-config" => cmd_default_config::run(),
 					_ => panic!("unhandled subcommand match case: {:?}", cmd),
 				} {
+
 					eprintln!("error: {}", e);
+
 					process::exit(2);
 				}
+
 				process::exit(0);
 			}
 		};
 
 		let raw_mode = !m.is_present("no-raw");
+
 		let config_path = m.value_of("config").map(PathBuf::from);
+
 		let volume = m.value_of("volume").map(|s| s.parse::<u8>().unwrap());
+
 		let device_no = m.value_of("device").map(|s| s.parse::<usize>().unwrap());
+
 		Self {
 			raw_mode,
 			config_path,
@@ -122,31 +139,41 @@ impl Args {
 }
 
 pub fn parse_config() -> Result<Config, Box<dyn Error>> {
+
 	let Args {
 		raw_mode,
 		volume,
 		device_no,
 		config_path,
 	} = Args::from_args();
+
 	let mut config = match config_path {
 		Some(p) => {
+
 			let data = fs::read_to_string(&p)?;
+
 			serde_json::from_str(&data)?
 		}
 		None => Config::default(),
 	};
 
 	if !raw_mode {
+
 		config.raw_mode = false;
 	}
+
 	config.device_no = device_no;
+
 	if let Some(v) = volume {
+
 		config.volume = v;
 	}
 
 	if config.volume > 127 {
+
 		Err("the value for volume can't be above 127".into())
 	} else {
+
 		Ok(config)
 	}
 }

@@ -15,6 +15,7 @@ use crate::DRUMS;
 
 #[derive(Deserialize)]
 #[serde(untagged)]
+
 enum DrumPre<'a> {
 	Num(u8),
 	Str(&'a str),
@@ -25,6 +26,7 @@ impl<'de> serde::Deserialize<'de> for Drum {
 	where
 		D: Deserializer<'de>,
 	{
+
 		match DrumPre::deserialize(des)? {
 			DrumPre::Num(n) => Ok(Self(n)),
 			DrumPre::Str(s) => DRUMS
@@ -37,10 +39,12 @@ impl<'de> serde::Deserialize<'de> for Drum {
 }
 
 pub(super) fn return_true() -> bool {
+
 	true
 }
 
 pub(super) fn default_keys() -> IndexMap<char, Drum> {
+
 	indexmap! {
 		'j' => Drum(36),
 		'h'=> Drum(36),
@@ -66,6 +70,7 @@ pub(super) fn default_keys() -> IndexMap<char, Drum> {
 }
 
 pub(super) fn default_volume() -> u8 {
+
 	127
 }
 
@@ -74,6 +79,7 @@ impl Serialize for Drum {
 	where
 		S: Serializer,
 	{
+
 		match DRUMS.iter().find(|note| note.1.eq(&self.0)) {
 			Some((name, _)) => se.serialize_str(name),
 			None => se.serialize_u8(self.0),
@@ -82,5 +88,6 @@ impl Serialize for Drum {
 }
 
 pub(super) fn default_presets() -> Vec<u8> {
+
 	vec![0, 8, 16, 24, 32, 40, 48]
 }

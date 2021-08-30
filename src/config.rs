@@ -9,6 +9,7 @@ mod de;
 
 #[derive(Serialize, Deserialize)]
 #[serde(default)]
+
 pub struct ControlKeys {
 	pub exit: KeyCode,
 	pub next_preset: KeyCode,
@@ -18,6 +19,7 @@ pub struct ControlKeys {
 }
 
 #[derive(Serialize, Deserialize)]
+
 pub struct Config {
 	#[serde(default = "de::return_true")]
 	pub raw_mode: bool,
@@ -36,6 +38,7 @@ pub struct Config {
 
 impl Default for ControlKeys {
 	fn default() -> Self {
+
 		Self {
 			exit: KeyCode::Esc,
 			next_preset: KeyCode::Right,
@@ -48,6 +51,7 @@ impl Default for ControlKeys {
 
 impl Default for Config {
 	fn default() -> Self {
+
 		Self {
 			raw_mode: true,
 			keys: de::default_keys(),
@@ -60,4 +64,5 @@ impl Default for Config {
 }
 
 #[derive(Debug, Clone, Copy)]
+
 pub struct Drum(pub u8);
