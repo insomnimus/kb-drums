@@ -8,13 +8,13 @@ use serde_derive::{
 mod de;
 
 #[derive(Serialize, Deserialize)]
+#[serde(default)]
 pub struct ControlKeys {
-	#[serde(default = "de::default_exit")]
 	pub exit: KeyCode,
-	#[serde(default = "de::default_next_preset")]
 	pub next_preset: KeyCode,
-	#[serde(default = "de::default_prev_preset")]
 	pub prev_preset: KeyCode,
+	pub volume_up: KeyCode,
+	pub volume_down: KeyCode,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -23,22 +23,25 @@ pub struct Config {
 	pub raw_mode: bool,
 	#[serde(default = "de::default_volume")]
 	pub volume: u8,
-	#[serde(default = "de::default_keys")]
-	pub keys: IndexMap<char, Drum>,
 	#[serde(default)]
 	pub control_keys: ControlKeys,
-	#[serde(skip)]
-	pub device_no: Option<usize>,
+	#[serde(default = "de::default_keys")]
+	pub keys: IndexMap<char, Drum>,
 	#[serde(default = "de::default_presets")]
 	pub presets: Vec<u8>,
+
+	#[serde(skip)]
+	pub device_no: Option<usize>,
 }
 
 impl Default for ControlKeys {
 	fn default() -> Self {
 		Self {
-			exit: de::default_exit(),
-			next_preset: de::default_next_preset(),
-			prev_preset: de::default_prev_preset(),
+			exit: KeyCode::Esc,
+			next_preset: KeyCode::Right,
+			prev_preset: KeyCode::Left,
+			volume_up: KeyCode::Up,
+			volume_down: KeyCode::Down,
 		}
 	}
 }

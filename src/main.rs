@@ -87,8 +87,8 @@ impl Controller {
 	}
 
 	fn start(&mut self) {
-		// set the MIDI volume.
-		let _ = self.midi.send(&[0xB9, 0x07, self.volume]);
+		// set the MIDI volume to max.
+		let _ = self.midi.send(&[0xB9, 0x07, 127]);
 		if self.raw_mode {
 			if let Err(e) = enable_raw_mode() {
 				eprintln!("warning: could not enable raw mode: {}", e);
@@ -102,14 +102,18 @@ impl Controller {
 			};
 
 			if let Some(&n) = self.keys.get(&k.code) {
-				let _ = self.midi.send(&[NOTE_OFF, n, 127]);
-				let _ = self.midi.send(&[NOTE_ON, n, 127]);
+				let _ = self.midi.send(&[NOTE_OFF, n, self.volume]);
+				let _ = self.midi.send(&[NOTE_ON, n, self.volume]);
 			} else if k.code == self.control.exit {
 				break;
 			} else if k.code == self.control.next_preset {
 				self.next_preset();
 			} else if k.code == self.control.prev_preset {
 				self.prev_preset();
+			} else if k.code == self.control.volume_up {
+				self.change_volume(12);
+			} else if k.code == self.control.volume_down {
+				self.change_volume(-12);
 			}
 		}
 
@@ -149,6 +153,23 @@ impl Controller {
 			Ok(_) => println!("Changed the preset to {}", n),
 			Err(e) => println!("Error changing the preset to {}: {}", n, e),
 		};
+	}
+
+	fn change_volume(&mut self, amount: i16) {
+		let x = self.volume as i16 + amount;
+		self.volume = if amount < 0 {
+			if x < 0 {
+				0
+			} else {
+				x as u8
+			}
+		} else if x > 127 {
+			127
+		} else {
+			x as u8
+		};
+
+		println!("volume = {}%", (self.volume as usize) * 100 / 127);
 	}
 }
 

@@ -1,4 +1,3 @@
-use crossterm::event::KeyCode;
 use indexmap::{
 	indexmap,
 	IndexMap,
@@ -68,18 +67,6 @@ pub(super) fn default_keys() -> IndexMap<char, Drum> {
 
 pub(super) fn default_volume() -> u8 {
 	127
-}
-
-pub(super) fn default_exit() -> KeyCode {
-	KeyCode::Esc
-}
-
-pub(super) fn default_next_preset() -> KeyCode {
-	KeyCode::Right
-}
-
-pub(super) fn default_prev_preset() -> KeyCode {
-	KeyCode::Left
 }
 
 impl Serialize for Drum {
