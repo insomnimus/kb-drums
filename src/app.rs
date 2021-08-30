@@ -131,7 +131,7 @@ pub fn parse_config() -> Result<Config, Box<dyn Error>> {
 	let mut config = match config_path {
 		Some(p) => {
 			let data = fs::read_to_string(&p)?;
-			toml::from_str(&data)?
+			serde_json::from_str(&data)?
 		}
 		None => Config::default(),
 	};
