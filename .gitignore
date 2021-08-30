@@ -8,3 +8,4 @@
 *.bash
 _*
 *.fish
+/gen

@@ -1,44 +1,52 @@
-pub mod keys {
-    const KICK_A: u8 = 36;
-    const KICK_B: u8 = 35;
-    const SNARE_A: u8 = 38;
-    const SNARE_B: u8 = 40;
-    const FLOOR_A: u8 = 41;
-    const FLOOR_B: u8 = 43;
-    const TOM_A: u8 = 45;
-    const TOM_B: u8 = 47;
-    const TOM_C: u8 = 48;
-    // const hatC: u8= 42;
-    const HAT_B: u8 = 44;
-    const HAT_A: u8 = 46;
-    const CRASH_A: u8 = 49;
-    // const CRASH_B: u8= 57;
-    const RIDE_A: u8 = 51;
-    // const RIDE_B: u8= 53;
-    const RIDE_C: u8 = 56;
-    // const rideD: u8= 59;
-    // const miscA: u8= 52;
-    // const miscB: u8= 37;
+pub mod app;
+pub mod config;
 
-    pub fn map_key(c: char) -> Option<u8> {
-        let n = match c {
-            'j' | 'h' => KICK_A,
-            'l' => SNARE_A,
-            'i' | 'ı' => HAT_A,
-            'f' | 'k' => RIDE_A,
-            'a' => CRASH_A,
-            'q' => FLOOR_A,
-            'g' => FLOOR_B,
-            'e' => TOM_A,
-            's' | 'p' => HAT_B,
-            'r' => TOM_B,
-            'w' | 'o' => SNARE_B,
-            't' => TOM_C,
-            'b' => HAT_B,
-            'n' | 'm' => KICK_B,
-            'd' => RIDE_C,
-            _ => return None,
-        };
-        Some(n)
-    }
-}
+pub(crate) const DRUMS: &[(&str, u8)] = &[
+	("acoustic_bass_drum", 35),
+	("bass_drum_1", 36),
+	("side_stick", 37),
+	("acoustic_snare", 38),
+	("hand_clap", 39),
+	("electric_snare", 40),
+	("low_floor_tom", 41),
+	("closed_hi-hat_", 42),
+	("high_floor_tom", 43),
+	("pedal_hi-hat", 44),
+	("low_tom", 45),
+	("open_hi-hat_", 46),
+	("low-mid_tom", 47),
+	("hi-mid_tom", 48),
+	("crash_cymbal_1", 49),
+	("high_tom", 50),
+	("ride_cymbal_1", 51),
+	("chinese_cymbal_", 52),
+	("ride_bell", 53),
+	("tambourine", 54),
+	("splash_cymbal_", 55),
+	("cowbell", 56),
+	("crash_cymbal_2", 57),
+	("vibraslap", 58),
+	("ride_cymbal_2", 59),
+	("hi_bongo", 60),
+	("low_bongo", 61),
+	("mute_hi_conga", 62),
+	("open_hi_conga", 63),
+	("low_conga", 64),
+	("high_timbale", 65),
+	("low_timbale", 66),
+	("high_agogo", 67),
+	("low_agogo", 68),
+	("cabasa", 69),
+	("maracas", 70),
+	("short_whistle", 71),
+	("long_whistle", 72),
+	("short_guiro", 73),
+	("long_guiro", 74),
+	("claves", 75),
+	("hi_wood_block", 76),
+	("low_wood_block", 77),
+	("mute_cuica", 78),
+	("open_cuica", 79),
+	("mute_triangle", 80),
+	("open_triangle", 81),
+];
