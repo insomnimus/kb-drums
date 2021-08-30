@@ -113,10 +113,10 @@ impl Args {
 		let volume = m.value_of("volume").map(|s| s.parse::<u8>().unwrap());
 		let device_no = m.value_of("device").map(|s| s.parse::<usize>().unwrap());
 		Self {
-			device_no,
-			config_path,
-			volume,
 			raw_mode,
+			config_path,
+			device_no,
+			volume,
 		}
 	}
 }
