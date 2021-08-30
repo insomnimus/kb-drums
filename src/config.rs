@@ -1,10 +1,23 @@
 use crossterm::event::KeyCode;
 use indexmap::IndexMap;
-use serde_derive::Deserialize;
+use serde_derive::{
+	Deserialize,
+	Serialize,
+};
 
 mod de;
 
-#[derive(serde_derive::Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
+pub struct ControlKeys {
+	#[serde(default = "de::default_exit")]
+	pub exit: KeyCode,
+	#[serde(default = "de::default_next_preset")]
+	pub next_preset: KeyCode,
+	#[serde(default = "de::default_prev_preset")]
+	pub prev_preset: KeyCode,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct Config {
 	#[serde(default = "de::return_true")]
 	pub raw_mode: bool,
@@ -12,10 +25,22 @@ pub struct Config {
 	pub volume: u8,
 	#[serde(default = "de::default_keys")]
 	pub keys: IndexMap<char, Drum>,
-	#[serde(default = "de::default_exit")]
-	pub exit: KeyCode,
+	#[serde(default)]
+	pub control_keys: ControlKeys,
 	#[serde(skip)]
 	pub device_no: Option<usize>,
+	#[serde(default = "de::default_presets")]
+	pub presets: Vec<u8>,
+}
+
+impl Default for ControlKeys {
+	fn default() -> Self {
+		Self {
+			exit: de::default_exit(),
+			next_preset: de::default_next_preset(),
+			prev_preset: de::default_prev_preset(),
+		}
+	}
 }
 
 impl Default for Config {
@@ -23,9 +48,10 @@ impl Default for Config {
 		Self {
 			raw_mode: true,
 			keys: de::default_keys(),
-			exit: de::default_exit(),
+			control_keys: ControlKeys::default(),
 			volume: de::default_volume(),
 			device_no: None,
+			presets: de::default_presets(),
 		}
 	}
 }

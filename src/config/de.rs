@@ -74,6 +74,14 @@ pub(super) fn default_exit() -> KeyCode {
 	KeyCode::Esc
 }
 
+pub(super) fn default_next_preset() -> KeyCode {
+	KeyCode::Right
+}
+
+pub(super) fn default_prev_preset() -> KeyCode {
+	KeyCode::Left
+}
+
 impl Serialize for Drum {
 	fn serialize<S>(&self, se: S) -> Result<S::Ok, S::Error>
 	where
@@ -84,4 +92,8 @@ impl Serialize for Drum {
 			None => se.serialize_u8(self.0),
 		}
 	}
+}
+
+pub(super) fn default_presets() -> Vec<u8> {
+	vec![0, 8, 16, 24, 32, 40, 48]
 }
