@@ -104,6 +104,7 @@ impl Args {
 					eprintln!("error: {}", e);
 					process::exit(2);
 				}
+				process::exit(0);
 			}
 		};
 
