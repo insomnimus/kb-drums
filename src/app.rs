@@ -17,6 +17,7 @@ use crate::config::Config;
 mod cmd_default_config;
 mod cmd_devices;
 mod cmd_drums;
+mod cmd_keys;
 
 struct Args {
 	raw_mode: bool,
@@ -69,6 +70,8 @@ impl Args {
 					})
 			});
 
+		let app_keys = App::new("keys").about("Show available key names used in the config file.");
+
 		let app_list = App::new("list")
 			.visible_alias("ls")
 			.about("List available MIDI output devices.");
@@ -78,7 +81,8 @@ impl Args {
 		let app_default_config =
 			App::new("default-config").about("Display the default configuration.");
 
-		app.subcommand(app_drums)
+		app.subcommand(app_keys)
+			.subcommand(app_drums)
 			.subcommand(app_list)
 			.subcommand(app_default_config)
 			.arg(config_path)
@@ -94,6 +98,10 @@ impl Args {
 			None => (),
 			Some(cmd) => {
 				if let Err(e) = match cmd {
+					"keys" => {
+						cmd_keys::run();
+						Ok(())
+					}
 					"drums" => {
 						cmd_drums::run();
 
