@@ -202,6 +202,7 @@ impl Controller {
 			"Next preset: {:?}\nPrev preset: {:?}",
 			self.control.next_preset, self.control.prev_preset
 		);
+		println!("Press {:?} to quit.", self.control.exit);
 		println!("Ready, set, jam!");
 	}
 }
