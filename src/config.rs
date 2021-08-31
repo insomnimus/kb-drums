@@ -38,7 +38,6 @@ pub struct Config {
 
 impl Default for ControlKeys {
 	fn default() -> Self {
-
 		Self {
 			exit: KeyCode::Esc,
 			next_preset: KeyCode::Right,
@@ -51,7 +50,6 @@ impl Default for ControlKeys {
 
 impl Default for Config {
 	fn default() -> Self {
-
 		Self {
 			raw_mode: true,
 			keys: de::default_keys(),
