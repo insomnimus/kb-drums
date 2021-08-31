@@ -27,6 +27,7 @@ use midir::{
 	MidiOutputConnection,
 };
 
+const PROGRAM_CHANGE: u8 = 0xC9;
 const NOTE_ON: u8 = 0x99;
 
 const NOTE_OFF: u8 = 0x89;
@@ -90,12 +91,20 @@ impl Controller {
 	}
 
 	fn start(&mut self) {
+		self.print_banner();
 		// set the MIDI volume to max.
 		let _ = self.midi.send(&[0xB9, 0x07, 127]);
 
 		if self.raw_mode {
 			if let Err(e) = enable_raw_mode() {
 				eprintln!("warning: could not enable raw mode: {}", e);
+			}
+		}
+
+		// Load the first preset.
+		if let Some(n) = self.presets.get(0) {
+			if let Err(e) = self.midi.send(&[PROGRAM_CHANGE, *n]) {
+				println!("warning: couldn't load the first preset({}): {}", n, e);
 			}
 		}
 
@@ -128,8 +137,6 @@ impl Controller {
 	}
 
 	fn next_preset(&mut self) {
-		const PROGRAM_CHANGE: u8 = 0xC9;
-
 		if self.presets.is_empty() {
 			println!("No presets detected.");
 
@@ -147,8 +154,6 @@ impl Controller {
 	}
 
 	fn prev_preset(&mut self) {
-		const PROGRAM_CHANGE: u8 = 0xC9;
-
 		if self.presets.is_empty() {
 			println!("No preset detected.");
 
@@ -185,6 +190,19 @@ impl Controller {
 		};
 
 		println!("volume = {}%", (self.volume as usize) * 100 / 127);
+	}
+
+	fn print_banner(&self) {
+		println!("Loaded {} presets.", self.presets.len());
+		println!(
+			"Volume up: {:?}\nVolume down: {:?}",
+			self.control.volume_up, self.control.volume_down
+		);
+		println!(
+			"Next preset: {:?}\nPrev preset: {:?}",
+			self.control.next_preset, self.control.prev_preset
+		);
+		println!("Ready, set, jam!");
 	}
 }
 
