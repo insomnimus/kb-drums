@@ -19,11 +19,41 @@ cargo install --path . --locked
 
 `cargo install --locked --git https://github.com/insomnimus/kb-drums --branch main # or rt`
 
-## Usage
+# Requirements For Running The App
 
-You need to have a midi daemon running (windows ships with a midi device but it's pretty crappy, i recommend [Virtual MIDI Synth] instead).
+You only need a MIDI device running as a service/daemon.
 
-Then just run `kb-drums` and hit some keys.
+Windows devices come with a default MIDI device, but the quality is pretty bad so [Virtual MIDI Synth][] or [OmniMIDI] is recommended.
+
+On *NIX, [Fluidsynth][] is very nice, although there are a lot of alternatives.
+
+[Fluidsynth][] also works on Apple devices.
+
+# Usage
+
+```output
+kb-drums 0.6.0
+
+Play MIDI drums from the command line.
+
+USAGE:
+    kb-drums.exe [OPTIONS] [SUBCOMMAND]
+
+OPTIONS:
+    -c, --config <config>       Specify a custom config file.
+    -h, --help                  Print help information
+    -n, --device-no <device>    The MIDI device no. Defaults to the first available device.
+        --no-raw                Disable raw mode.
+    -v, --volume <volume>       A number between 0 and 127, 127=max.
+    -V, --version               Print version information
+
+SUBCOMMANDS:
+    default-config    Display the default configuration.
+    drums             Show a list of available drum names.
+    help              Print this message or the help of the given subcommand(s)
+    keys              Show available key names used in the config file.
+    list              List available MIDI output devices. [aliases: ls]
+```
 
 # Key Mapping
 
@@ -34,3 +64,5 @@ In the `keys` map, the keys are any letter keys (a-z)
 and the values are either a drum name (run `kb-drums drums` to see them all) or any valid MIDI note numbers (not strings, numbers).
 
 [Virtual MIDI Synth]: https://coolsoft.altervista.org/en/virtualmidisynth
+[OmniMIDI]: https://github.com/KeppySoftware/OmniMIDI
+[Fluidsynth]: https://www.fluidsynth.org/
