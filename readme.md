@@ -45,7 +45,7 @@ On *NIX or OSX, [Fluidsynth][] is very nice, although there are a lot of alterna
 # Usage
 
 ```output
-kb-drums 0.6.0
+kb-drums 0.6.1
 
 Play MIDI drums from the command line.
 
@@ -54,8 +54,8 @@ USAGE:
 
 OPTIONS:
     -c, --config <config>       Specify a custom config file.
+    -d, --device-no <device>    The MIDI device no. Defaults to the first available device.
     -h, --help                  Print help information
-    -n, --device-no <device>    The MIDI device no. Defaults to the first available device.
         --no-raw                Disable raw mode.
     -v, --volume <volume>       A number between 0 and 127, 127=max.
     -V, --version               Print version information
