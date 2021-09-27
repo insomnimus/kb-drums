@@ -1,16 +1,6 @@
-use std::{
-	error::Error,
-	fs,
-	path::PathBuf,
-	process,
-};
+use std::{error::Error, fs, path::PathBuf, process};
 
-use clap::{
-	crate_version,
-	App,
-	AppSettings,
-	Arg,
-};
+use clap::{crate_version, App, AppSettings, Arg};
 
 use crate::config::Config;
 
@@ -42,8 +32,8 @@ impl Args {
 
 		let no_raw_mode = Arg::new("no-raw").long("no-raw").about("Disable raw mode.");
 
-		let device_no = Arg::new("device")
-			.short('n')
+		let device = Arg::new("device")
+			.short('d')
 			.long("device-no")
 			.about("The MIDI device no. Defaults to the first available device.")
 			.takes_value(true)
@@ -88,7 +78,7 @@ impl Args {
 			.arg(config_path)
 			.arg(no_raw_mode)
 			.arg(volume)
-			.arg(device_no)
+			.arg(device)
 	}
 
 	fn from_args() -> Self {

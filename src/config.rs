@@ -1,9 +1,6 @@
 use crossterm::event::KeyCode;
 use indexmap::IndexMap;
-use serde_derive::{
-	Deserialize,
-	Serialize,
-};
+use serde_derive::{Deserialize, Serialize};
 
 mod de;
 

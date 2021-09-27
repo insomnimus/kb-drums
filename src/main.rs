@@ -1,31 +1,20 @@
 use std::{
 	error::Error,
+	io::{self, Write},
 	process,
 };
 
 use crossterm::{
-	event::{
-		self,
-		Event,
-		KeyCode,
-	},
-	terminal::{
-		disable_raw_mode,
-		enable_raw_mode,
-	},
+	event::{self, Event, KeyCode},
+	terminal::{disable_raw_mode, enable_raw_mode, is_raw_mode_enabled, Clear, ClearType},
+	ExecutableCommand,
 };
 use indexmap::IndexMap;
 use kb_drums::{
 	app,
-	config::{
-		Config,
-		ControlKeys,
-	},
+	config::{Config, ControlKeys},
 };
-use midir::{
-	MidiOutput,
-	MidiOutputConnection,
-};
+use midir::{MidiOutput, MidiOutputConnection};
 
 const PROGRAM_CHANGE: u8 = 0xC9;
 const NOTE_ON: u8 = 0x99;
@@ -104,7 +93,10 @@ impl Controller {
 		// Load the first preset.
 		if let Some(n) = self.presets.get(0) {
 			if let Err(e) = self.midi.send(&[PROGRAM_CHANGE, *n]) {
-				println!("warning: couldn't load the first preset({}): {}", n, e);
+				print(&format!(
+					"warning: couldn't load the first preset({}): {}",
+					n, e
+				));
 			}
 		}
 
@@ -138,7 +130,7 @@ impl Controller {
 
 	fn next_preset(&mut self) {
 		if self.presets.is_empty() {
-			println!("No presets detected.");
+			print("No presets detected.");
 
 			return;
 		}
@@ -148,14 +140,14 @@ impl Controller {
 		let n = self.presets[self.cursor as usize];
 
 		match self.midi.send(&[PROGRAM_CHANGE, n]) {
-			Ok(_) => println!("Changed the preset to {}", n),
-			Err(e) => println!("Error changing the preset to {}: {}", n, e),
+			Ok(_) => print(&format!("Changed the preset to {}", n)),
+			Err(e) => print(&format!("Error changing the preset to {}: {}", n, e)),
 		};
 	}
 
 	fn prev_preset(&mut self) {
 		if self.presets.is_empty() {
-			println!("No preset detected.");
+			print("No preset detected.");
 
 			return;
 		}
@@ -169,8 +161,8 @@ impl Controller {
 		let n = self.presets[self.cursor as usize];
 
 		match self.midi.send(&[PROGRAM_CHANGE, n]) {
-			Ok(_) => println!("Changed the preset to {}", n),
-			Err(e) => println!("Error changing the preset to {}: {}", n, e),
+			Ok(_) => print(&format!("Changed the preset to {}", n)),
+			Err(e) => print(&format!("Error changing the preset to {}: {}", n, e)),
 		};
 	}
 
@@ -189,7 +181,7 @@ impl Controller {
 			x as u8
 		};
 
-		println!("volume = {}%", (self.volume as usize) * 100 / 127);
+		print(&format!("volume = {}%", (self.volume as usize) * 100 / 127));
 	}
 
 	fn print_banner(&self) {
@@ -204,6 +196,26 @@ impl Controller {
 		);
 		println!("Press {:?} to quit.", self.control.exit);
 		println!("Ready, set, jam!");
+	}
+}
+
+fn print(s: &str) {
+	fn inner(s: &str) -> Result<(), io::Error> {
+		let mut stdout = io::stdout();
+		stdout.execute(Clear(ClearType::UntilNewLine))?;
+		for (i, ln) in s.lines().filter(|s| !s.is_empty()).enumerate() {
+			if i > 0 {
+				writeln!(&mut stdout)?;
+			}
+			write!(&mut stdout, "{}\r", ln)?;
+			stdout.flush()?;
+		}
+		Ok(())
+	}
+	if let Ok(true) = is_raw_mode_enabled() {
+		let _ = inner(s);
+	} else {
+		println!("{}", s);
 	}
 }
 

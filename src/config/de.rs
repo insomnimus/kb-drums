@@ -1,13 +1,5 @@
-use indexmap::{
-	indexmap,
-	IndexMap,
-};
-use serde::{
-	de::Error,
-	Deserializer,
-	Serialize,
-	Serializer,
-};
+use indexmap::{indexmap, IndexMap};
+use serde::{de::Error, Deserializer, Serialize, Serializer};
 use serde_derive::Deserialize;
 
 use super::Drum;
@@ -48,7 +40,7 @@ pub(super) fn default_keys() -> IndexMap<char, Drum> {
 		'm' => Drum(35),
 		'l' => Drum(38),
 		'i' => Drum(46),
-		'f' => Drum(51),
+		'f' => Drum(46),
 		'k' => Drum(51),
 		'a' => Drum(49),
 		'q' => Drum(41),
