@@ -1,31 +1,44 @@
 # kb-drums
 
-A cli app to play drums with your keyboard.
+Play drums with unnoticeable latency on your keyboard!
 
-## Installation
+# Installation
+For pre-built binaries for your platform, visit the [releases page](https://github.com/insomnimus/kb-drums/releases).
+
+To build kb-drums from source, keep on reading.
+
+# Building the Project
+
+First, if you're on a linux system, make sure you have alsa dev libraries installed:
+```sh
+# debian and derivatives
+apt install libasound2-dev
+
+# RHEL and friends
+dnf install alsa-lib-devel
+```
 
 You have two options:
 
-### Using git
+## Using git
 
 ```sh
 git clone https://github.com/insomnimus/kb-drums
 cd kb-drums
-git checkout main # or you can choose `rt`
+git checkout main
 cargo install --path . --locked
 ```
 
-### Using cargo
+## Using cargo
 
-`cargo install --locked --git https://github.com/insomnimus/kb-drums --branch main # or rt`
+`cargo install --locked --git https://github.com/insomnimus/kb-drums --branch main`
 
 # Requirements For Running The App
 
 You only need a MIDI device running as a service/daemon.
-
 Windows devices come with a default MIDI device, but the quality is pretty bad so [Virtual MIDI Synth][] or [OmniMIDI] is recommended.
 
-On *NIX, [Fluidsynth][] is very nice, although there are a lot of alternatives.
+On *NIX or OSX, [Fluidsynth][] is very nice, although there are a lot of alternatives.
 
 [Fluidsynth][] also works on Apple devices.
 
