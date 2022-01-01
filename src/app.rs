@@ -1,6 +1,15 @@
-use std::{error::Error, fs, path::PathBuf, process};
+use std::{
+	error::Error,
+	fs,
+	path::PathBuf,
+	process,
+};
 
-use clap::{crate_version, App, AppSettings, Arg};
+use clap::{
+	arg,
+	crate_version,
+	App,
+};
 
 use crate::config::Config;
 
@@ -21,44 +30,26 @@ impl Args {
 		let app = App::new("kb-drums")
 			.about("Play MIDI drums from the command line.")
 			.version(crate_version!())
-			.setting(AppSettings::UnifiedHelpMessage)
-			.setting(AppSettings::DisableVersionForSubcommands);
-
-		let config_path = Arg::new("config")
-			.short('c')
-			.long("config")
-			.about("Specify a custom config file.")
-			.takes_value(true);
-
-		let no_raw_mode = Arg::new("no-raw").long("no-raw").about("Disable raw mode.");
-
-		let device = Arg::new("device")
-			.short('d')
-			.long("device-no")
-			.about("The MIDI device no. Defaults to the first available device.")
-			.takes_value(true)
-			.validator(|s| {
-				s.parse::<usize>()
-					.map(|_| {})
-					.map_err(|_| "the value must be a non-negative number")
-			});
-
-		let volume = Arg::new("volume")
-			.short('v')
-			.long("volume")
-			.about("A number between 0 and 127, 127=max.")
-			.takes_value(true)
-			.validator(|s| {
-				s.parse::<u8>()
-					.map_err(|_| String::from("the value must be an integer between 0 and 127"))
-					.and_then(|n| {
-						if n > 127 {
-							Err(String::from("the value can't be higher than 127"))
-						} else {
-							Ok(())
-						}
-					})
-			});
+			.args(&[
+				arg!(-d --device  [NO] "Specify the MIDI output device.").validator(|s| {
+					s.parse::<usize>()
+						.map(|_| {})
+						.map_err(|_| "the value must be a non-negative number")
+				}),
+				arg!(-c --config [PATH] "Specify a config file."),
+				arg!(--noraw "Do not enable raw mode."),
+				arg!(-v --volume [VOLUME] "The volume. A number between 0 and 127.").validator(
+					|s| {
+						s.parse::<u8>()
+							.ok()
+							.filter(|&n| n < 128)
+							.map(|_| {})
+							.ok_or_else(|| {
+								String::from("the value must be a number between 0 and 127")
+							})
+					},
+				),
+			]);
 
 		let app_keys = App::new("keys").about("Show available key names used in the config file.");
 
@@ -75,10 +66,6 @@ impl Args {
 			.subcommand(app_drums)
 			.subcommand(app_list)
 			.subcommand(app_default_config)
-			.arg(config_path)
-			.arg(no_raw_mode)
-			.arg(volume)
-			.arg(device)
 	}
 
 	fn from_args() -> Self {

@@ -1,5 +1,13 @@
-use indexmap::{indexmap, IndexMap};
-use serde::{de::Error, Deserializer, Serialize, Serializer};
+use indexmap::{
+	indexmap,
+	IndexMap,
+};
+use serde::{
+	de::Error,
+	Deserializer,
+	Serialize,
+	Serializer,
+};
 use serde_derive::Deserialize;
 
 use super::Drum;

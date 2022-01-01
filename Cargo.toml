@@ -1,11 +1,11 @@
 [package]
 name = "kb-drums"
-version = "0.6.1"
+version = "0.6.2"
 authors = ["insomnimus <insomnimus19@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-clap = "3.0.0-beta.4"
+clap = { version = "3.0.0", features = ["cargo", "wrap_help", "unicode"] }
 crossterm = { version = "0.21.0", features = ["serde"] }
 indexmap = { version = "1.7.0", features = [ "serde" ] }
 midir = "0.7.0"

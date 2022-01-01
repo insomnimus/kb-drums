@@ -1,24 +1,42 @@
 use std::{
 	error::Error,
-	io::{self, Write},
+	io::{
+		self,
+		Write,
+	},
 	process,
 };
 
 use crossterm::{
-	event::{self, Event, KeyCode},
-	terminal::{disable_raw_mode, enable_raw_mode, is_raw_mode_enabled, Clear, ClearType},
+	event::{
+		self,
+		Event,
+		KeyCode,
+	},
+	terminal::{
+		disable_raw_mode,
+		enable_raw_mode,
+		is_raw_mode_enabled,
+		Clear,
+		ClearType,
+	},
 	ExecutableCommand,
 };
 use indexmap::IndexMap;
 use kb_drums::{
 	app,
-	config::{Config, ControlKeys},
+	config::{
+		Config,
+		ControlKeys,
+	},
 };
-use midir::{MidiOutput, MidiOutputConnection};
+use midir::{
+	MidiOutput,
+	MidiOutputConnection,
+};
 
 const PROGRAM_CHANGE: u8 = 0xC9;
 const NOTE_ON: u8 = 0x99;
-
 const NOTE_OFF: u8 = 0x89;
 
 struct Controller {
